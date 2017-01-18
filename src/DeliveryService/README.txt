@@ -1,0 +1,1 @@
+﻿Simple delivery service on .net core

@@ -1,27 +1,22 @@
-﻿{
+{
   "dependencies": {
+    "Nancy": "2.0.0-clinteastwood",
+    "DeliveryService.Models": "1.0.0-*",
+    "DeliveryService.Data": "1.0.0-*",
     "Microsoft.NETCore.App": {
       "version": "1.0.1",
       "type": "platform"
     },
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
-    
-    "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
     "Microsoft.AspNetCore.Server.Kestrel": "1.0.1",
-    "Microsoft.Extensions.Logging.Console": "1.0.0"
+    "Microsoft.Extensions.Logging.Console": "1.0.0",
+    "Microsoft.AspNetCore.Owin": "1.1.0"
   },
-
-  "tools": {
-    "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.0.0-preview2-final"
+  "commands": {
+    "web": "Microsoft.AspNet.Server.Kestrel"
   },
-
   "frameworks": {
-    "netcoreapp1.0": {
-      "imports": [
-        "dotnet5.6",
-        "portable-net45+win8"
-      ]
-    }
+    "netcoreapp1.0": {}
   },
 
   "buildOptions": {
