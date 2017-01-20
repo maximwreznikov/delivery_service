@@ -8,16 +8,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace DeliveryService.Data
 {
-    public interface IDeliveryServiceContext : IDisposable, IInfrastructure<IServiceProvider>
-    {
-        DbSet<Person> Persons { get; set; }
-        DbSet<DeliveryObject> Deliveries { get; set; }
-    }
-
-    public class DeliveryServiceContext : DbContext, IDeliveryServiceContext
+    public class DeliveryServiceContext : DbContext
     {
         public DbSet<Person> Persons { get; set; }
         public DbSet<DeliveryObject> Deliveries { get; set; }
+
+        public DeliveryServiceContext():base()
+        {
+            Database.EnsureCreated();
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

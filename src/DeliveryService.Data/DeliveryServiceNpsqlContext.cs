@@ -9,9 +9,10 @@ namespace DeliveryService.Data
 {
     public class DeliveryServiceNpsqlContext : DeliveryServiceContext
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            var ok = optionsBuilder.IsConfigured;
+            var connection = @"server=localhost;user id=test;password=test;database=delivery_service";
+            options.UseNpgsql(connection);
         }
     }
 }

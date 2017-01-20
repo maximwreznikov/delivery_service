@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Nancy;
+using Nancy.TinyIoc;
 
 namespace DeliveryService
 {
@@ -12,5 +13,10 @@ namespace DeliveryService
         {
 
         }
+
+/*        protected override TinyIoCContainer GetApplicationContainer()
+        {
+            return _container;
+        }*/
     }
 }

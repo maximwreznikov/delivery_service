@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,8 +15,9 @@ namespace DeliveryService.Models
 
     public class DeliveryObject
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key, Column(Order = 0)]
+        public int DeliveryObjectId { get; set; }
         public DeliveryStatus? Status { get; set; }
         public string Title { get; set; }
         public DateTime CreationTime { get; set; }

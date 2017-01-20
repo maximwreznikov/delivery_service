@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using DeliveryService.Data;
+using DeliveryService.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,6 +13,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nancy.Owin;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Nancy.Extensions;
 
 namespace DeliveryService
 {
@@ -23,7 +27,9 @@ namespace DeliveryService
         {
             // Set up configuration sources.
             var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             // save the configuration in Configuration property
             Configuration = builder.Build();
@@ -31,9 +37,13 @@ namespace DeliveryService
 
         public void ConfigureServices(IServiceCollection services)
         {
-//            var connection = @"server=localhost;user id=test;password=test;database=delivery_service";
-//            services.AddDbContext<DeliveryServiceSqlLiteContext>(options => options.UseNpgsql(connection));
-            services.AddDbContext<DeliveryServiceSqlLiteContext>();
+            services.AddEntityFrameworkSqlite()
+                .AddDbContext<DeliveryServiceSqlLiteContext>();
+
+//            services.AddMvc()
+//                .AddApplicationPart(typeof(IDeliveryRepository).GetAssembly());
+
+            services.AddScoped<IDeliveryRepository, DeliverySqlLiteRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +56,7 @@ namespace DeliveryService
                 app.UseDeveloperExceptionPage();
             }
 
+//            app.UseMvc();
             app.UseOwin(x => x.UseNancy(options => options.Bootstrapper = new DeliveryBootstrapper()));
             DbInitializer.Initialize(context);
         }
