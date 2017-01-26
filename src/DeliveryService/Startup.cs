@@ -49,14 +49,23 @@ namespace DeliveryService
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, DeliveryServiceSqlLiteContext context)
         {
-            loggerFactory.AddConsole();
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddDebug();
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+//                app.UseDatabaseErrorPage();
+//                app.UseBrowserLink();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
             }
 
-//            app.UseMvc();
+//            app.UseStaticFiles();
+//            app.UseIdentity();
+
             app.UseOwin(x => x.UseNancy(options => options.Bootstrapper = new DeliveryBootstrapper()));
             DbInitializer.Initialize(context);
         }

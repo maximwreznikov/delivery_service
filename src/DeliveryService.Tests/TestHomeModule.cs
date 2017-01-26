@@ -13,8 +13,19 @@ namespace DeliveryService.Tests
         }
 
         [Fact]
-        public void TestIdex()
+        public void TestPingName()
         {
+        }
+
+        [Fact]
+        public void TestGetAvailableDeliveries()
+        {
+        }
+
+        [Fact]
+        public void TestTakeDelivery()
+        {
+            
         }
     }
 }

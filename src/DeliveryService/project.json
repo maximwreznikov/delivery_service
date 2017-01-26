@@ -7,10 +7,10 @@
     "Microsoft.AspNetCore.Owin": "1.1.0",
     "DeliveryService.Data": "1.0.0-*",
     "DeliveryService.Models": "1.0.0-*",
-    "Microsoft.Extensions.Configuration.Json": "1.0.0",
-    "Microsoft.AspNetCore.Mvc.Core": "1.0.1",
-    "System.Interactive.Async": "3.0.0",
-    "Microsoft.AspNetCore.Mvc": "1.0.1"
+    "Microsoft.Extensions.Configuration.Json": "1.1.0",
+    "System.Interactive.Async": "3.1.1",
+    "Microsoft.Extensions.Logging.Debug": "1.0.0",
+    "Microsoft.AspNetCore.Mvc.Core": "1.1.0",
   },
   "commands": {
     "web": "Microsoft.AspNet.Server.Kestrel"

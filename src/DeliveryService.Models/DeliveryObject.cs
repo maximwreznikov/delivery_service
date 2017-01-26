@@ -10,7 +10,8 @@ namespace DeliveryService.Models
     public enum DeliveryStatus
     {
         Available,
-        Expired
+        Expired,
+        Taken
     }
 
     public class DeliveryObject
