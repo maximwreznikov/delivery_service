@@ -39,11 +39,9 @@ namespace DeliveryService
         {
             services.AddEntityFrameworkSqlite()
                 .AddDbContext<DeliveryServiceSqlLiteContext>();
-
-//            services.AddMvc()
-//                .AddApplicationPart(typeof(IDeliveryRepository).GetAssembly());
-
+            
             services.AddScoped<IDeliveryRepository, DeliverySqlLiteRepository>();
+            services.AddScoped<IUserRepository, UserRepository<DeliveryServiceSqlLiteContext>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,15 +53,14 @@ namespace DeliveryService
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-//                app.UseDatabaseErrorPage();
-//                app.UseBrowserLink();
+                app.UseDatabaseErrorPage();
+                app.UseBrowserLink();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
             }
 
-//            app.UseStaticFiles();
 //            app.UseIdentity();
 
             app.UseOwin(x => x.UseNancy(options => options.Bootstrapper = new DeliveryBootstrapper()));

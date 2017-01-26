@@ -48,10 +48,9 @@ namespace DeliveryService.Modules
 
         public Response TakeDelivery(dynamic args)
         {
-            var myDelivery = _repository.AttachDelivery(args.delivery, args.user);
-//            var myUser = userRepository.GetPerson();
+            DeliveryObject newDelivery = _repository.AttachDelivery(args.delivery, args.user);
 
-            return Response.AsJson(myDelivery)
+            return Response.AsJson(newDelivery)
             .WithContentType("application/json")
             .WithStatusCode(HttpStatusCode.Accepted);
         }

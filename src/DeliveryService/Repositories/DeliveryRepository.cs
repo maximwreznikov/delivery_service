@@ -42,14 +42,15 @@ namespace DeliveryService.Repositories
             set;
         }
 
-        public bool AttachDelivery(int delivery, int user)
+        public DeliveryObject AttachDelivery(int delivery, int user)
         {
             var myDelivery = GetDelivery(delivery);
             var myUser = userRepository.GetPerson(user);
             myDelivery.ModificationTime = DateTime.Now;
             myDelivery.Status = DeliveryStatus.Taken;
             myDelivery.PersonId = myUser.PersonId;
-            return true;
+            _context.SaveChanges();
+            return myDelivery;
         }
     }
 
