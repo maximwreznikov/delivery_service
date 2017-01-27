@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DeliveryService.Core;
 using DeliveryService.Data;
 using DeliveryService.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -35,22 +36,10 @@ namespace DeliveryService.Repositories
             return true;
         }
 
-        [FromServices]
-        public IUserRepository userRepository
+        public async void UpdateDelivery(DeliveryObject delivery)
         {
-            get;
-            set;
-        }
-
-        public DeliveryObject AttachDelivery(int delivery, int user)
-        {
-            var myDelivery = GetDelivery(delivery);
-            var myUser = userRepository.GetPerson(user);
-            myDelivery.ModificationTime = DateTime.Now;
-            myDelivery.Status = DeliveryStatus.Taken;
-            myDelivery.PersonId = myUser.PersonId;
-            _context.SaveChanges();
-            return myDelivery;
+            _context.Deliveries.Update(delivery);
+            await _context.SaveChangesAsync();
         }
     }
 

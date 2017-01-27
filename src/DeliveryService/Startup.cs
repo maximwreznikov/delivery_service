@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DeliveryService.Core;
 using DeliveryService.Data;
 using DeliveryService.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -42,10 +43,11 @@ namespace DeliveryService
             
             services.AddScoped<IDeliveryRepository, DeliverySqlLiteRepository>();
             services.AddScoped<IUserRepository, UserRepository<DeliveryServiceSqlLiteContext>>();
+            services.AddSingleton<IDateTime, MachineClockDateTime>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, DeliveryServiceSqlLiteContext context)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, DeliveryServiceSqlLiteContext context, IDateTime clock)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();

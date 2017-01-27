@@ -11,6 +11,6 @@ namespace DeliveryService.Repositories
         IEnumerable<DeliveryObject> AllDeliveries();
         bool Add(DeliveryObject delivery);
         DeliveryObject GetDelivery(int id);
-        DeliveryObject AttachDelivery(int delivery, int user);
+        void UpdateDelivery(DeliveryObject delivery);
     }
 }

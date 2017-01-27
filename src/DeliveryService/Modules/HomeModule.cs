@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using DeliveryService.Core;
 using DeliveryService.Data;
 using DeliveryService.Models;
 using DeliveryService.Repositories;
@@ -13,10 +15,18 @@ namespace DeliveryService.Modules
 {
     public class HomeModule : NancyModule
     {
-        private IDeliveryRepository _repository;
-        public HomeModule(IDeliveryRepository repository)
+        private readonly IDateTime _systemClock;
+
+        private readonly IDeliveryRepository _repository;
+        private readonly IUserRepository _userRepository;
+
+        public HomeModule(IDateTime systemClock,
+            IDeliveryRepository repository, 
+            IUserRepository userRepository)
         {
+            _systemClock = systemClock;
             _repository = repository;
+            _userRepository = userRepository;
 
             Get("/", args => "Hello from Delivery Service running on CoreCLR");
 
@@ -31,7 +41,7 @@ namespace DeliveryService.Modules
 
         public Response CreateDelivery(dynamic args)
         {
-            var time = DateTime.Now;
+            var time = _systemClock.Now;
             var newDelivery = new DeliveryObject
             {
                 Title = args.title,
@@ -48,7 +58,17 @@ namespace DeliveryService.Modules
 
         public Response TakeDelivery(dynamic args)
         {
-            DeliveryObject newDelivery = _repository.AttachDelivery(args.delivery, args.user);
+            var user = _userRepository.GetPerson(args.user);
+            if (user == null) return new NotFoundResponse().WithStatusCode(HttpStatusCode.Unauthorized);
+
+            var myDelivery = _repository.GetDelivery(args.delivery);
+            if (myDelivery == null) return new NotFoundResponse().WithStatusCode(HttpStatusCode.NotFound);
+
+            myDelivery.ModificationTime = _systemClock.Now;
+            myDelivery.Status = DeliveryStatus.Taken;
+            myDelivery.PersonId = user.PersonId;
+
+            DeliveryObject newDelivery = _repository.UpdateDelivery(myDelivery);
 
             return Response.AsJson(newDelivery)
             .WithContentType("application/json")
