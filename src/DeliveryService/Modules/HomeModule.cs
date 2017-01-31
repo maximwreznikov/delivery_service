@@ -30,7 +30,9 @@ namespace DeliveryService.Modules
 
             Get("/", args => "Hello from Delivery Service running on CoreCLR");
 
-            Get("/ping_name/{name}", args => Response.AsJson(new Person {Name = args.name}));
+            Get("/ping_clock/{name}", args => Response.AsJson(new {person = new Person {Name = args.name}, clock = _systemClock.Now})
+            .WithContentType("application/json")
+            .WithStatusCode(HttpStatusCode.OK));
             Get("/GetAvailableDeliveries", args => Response.AsJson(repository.AllDeliveries().ToList())
                     .WithContentType("application/json")
                     .WithStatusCode(HttpStatusCode.OK));
