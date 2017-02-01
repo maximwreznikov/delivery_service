@@ -18,7 +18,7 @@ namespace DeliveryService.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key, Column(Order = 0)]
-        public int DeliveryObjectId { get; set; }
+        public int Id { get; set; }
         public DeliveryStatus? Status { get; set; }
         public string Title { get; set; }
         public DateTime CreationTime { get; set; }

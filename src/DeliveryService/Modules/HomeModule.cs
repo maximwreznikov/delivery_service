@@ -7,8 +7,6 @@ using DeliveryService.Core;
 using DeliveryService.Data;
 using DeliveryService.Models;
 using DeliveryService.Repositories;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Nancy;
 
 namespace DeliveryService.Modules
@@ -31,8 +29,9 @@ namespace DeliveryService.Modules
             Get("/", args => "Hello from Delivery Service running on CoreCLR");
 
             Get("/ping_clock/{name}", args => Response.AsJson(new {person = new Person {Name = args.name}, clock = _systemClock.Now})
-            .WithContentType("application/json")
-            .WithStatusCode(HttpStatusCode.OK));
+                    .WithContentType("application/json")
+                    .WithStatusCode(HttpStatusCode.OK));
+
             Get("/GetAvailableDeliveries", args => Response.AsJson(repository.AllDeliveries().ToList())
                     .WithContentType("application/json")
                     .WithStatusCode(HttpStatusCode.OK));
@@ -63,16 +62,17 @@ namespace DeliveryService.Modules
             var user = _userRepository.GetPerson(args.user);
             if (user == null) return new NotFoundResponse().WithStatusCode(HttpStatusCode.Unauthorized);
 
-            var myDelivery = _repository.GetDelivery(args.delivery);
+            DeliveryObject myDelivery = _repository.GetDelivery(args.delivery);
             if (myDelivery == null) return new NotFoundResponse().WithStatusCode(HttpStatusCode.NotFound);
+            if (myDelivery.Status != DeliveryStatus.Available) return new NotFoundResponse().WithStatusCode(HttpStatusCode.UnprocessableEntity);
 
             myDelivery.ModificationTime = _systemClock.Now;
             myDelivery.Status = DeliveryStatus.Taken;
-            myDelivery.PersonId = user.PersonId;
+            myDelivery.PersonId = user.Id;
 
-            DeliveryObject newDelivery = _repository.UpdateDelivery(myDelivery);
+           _repository.UpdateDelivery(myDelivery);
 
-            return Response.AsJson(newDelivery)
+            return Response.AsJson(myDelivery)
             .WithContentType("application/json")
             .WithStatusCode(HttpStatusCode.Accepted);
         }

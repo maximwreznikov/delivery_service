@@ -26,7 +26,7 @@ namespace DeliveryService.Repositories
 
         public DeliveryObject GetDelivery(int id)
         {
-            return _context.Deliveries.FirstOrDefault(o => o.DeliveryObjectId == id);
+            return _context.Deliveries.FirstOrDefault(o => o.Id == id);
         }
 
         public bool Add(DeliveryObject delivery)
