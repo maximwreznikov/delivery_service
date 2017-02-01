@@ -109,8 +109,8 @@ namespace DeliveryService.Tests
         public async void TestTakeDelivery()
         {
             // Arrange
-            var deliveryObject = new DeliveryObject { Id = 101, Title = "Box of Tea", Status = DeliveryStatus.Available,ModificationTime = DateTime.MinValue};
-            var deliveryObject2 = new DeliveryObject { Id = 101, Title = "Box of Tea", Status = DeliveryStatus.Taken,ModificationTime = DateTime.MinValue};
+            var deliveryObject = new DeliveryObject { Id = 101, Title = "Box of Shugar", Status = DeliveryStatus.Available, ModificationTime = DateTime.MinValue};
+            var deliveryObject2 = new DeliveryObject { Id = 101, Title = "Box of Tea", Status = DeliveryStatus.Taken, ModificationTime = DateTime.MinValue};
             var deliveryMock = new Mock<IDeliveryRepository>();
             deliveryMock.Setup(r => r.GetDelivery(It.Is<int>( i => i == 101))).Returns(deliveryObject);
             deliveryMock.Setup(r => r.GetDelivery(It.Is<int>( i => i == 102))).Returns(deliveryObject2);

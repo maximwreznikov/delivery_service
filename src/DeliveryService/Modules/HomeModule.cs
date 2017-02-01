@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DeliveryService.Core;
+using DeliveryService.Core.Responses;
 using DeliveryService.Data;
 using DeliveryService.Models;
 using DeliveryService.Repositories;
 using Nancy;
+using Nancy.Routing;
 
 namespace DeliveryService.Modules
 {
@@ -38,6 +40,7 @@ namespace DeliveryService.Modules
 
             Post("/CreateDelivery/{title}", args => CreateDelivery(args));
             Post("/TakeDelivery/{user:int}.{delivery:int}", args => TakeDelivery(args));
+            Get("/Error", args => Response.AsJson("Internal server errror").WithStatusCode(HttpStatusCode.InternalServerError));
         }
 
         public Response CreateDelivery(dynamic args)
@@ -60,11 +63,11 @@ namespace DeliveryService.Modules
         public Response TakeDelivery(dynamic args)
         {
             var user = _userRepository.GetPerson(args.user);
-            if (user == null) return new NotFoundResponse().WithStatusCode(HttpStatusCode.Unauthorized);
+            if (user == null) return Response.AsError(HttpStatusCode.Unauthorized, "Can`t find user");
 
             DeliveryObject myDelivery = _repository.GetDelivery(args.delivery);
-            if (myDelivery == null) return new NotFoundResponse().WithStatusCode(HttpStatusCode.NotFound);
-            if (myDelivery.Status != DeliveryStatus.Available) return new NotFoundResponse().WithStatusCode(HttpStatusCode.UnprocessableEntity);
+            if (myDelivery == null) return Response.AsError(HttpStatusCode.NotFound, "Can`t find delivery");
+            if (myDelivery.Status != DeliveryStatus.Available) return Response.AsError(HttpStatusCode.UnprocessableEntity, "Wrong status! Delivery must have status Available");
 
             myDelivery.ModificationTime = _systemClock.Now;
             myDelivery.Status = DeliveryStatus.Taken;

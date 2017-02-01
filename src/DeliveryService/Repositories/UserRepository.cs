@@ -7,6 +7,18 @@ using DeliveryService.Models;
 
 namespace DeliveryService.Repositories
 {
+    public class UserServiceNpsqlRepository : UserRepository<DeliveryServiceNpsqlContext>
+    {
+        public UserServiceNpsqlRepository(DeliveryServiceNpsqlContext context) : base(context)
+        { }
+    }
+
+    public class UserSqlLiteRepository : UserRepository<DeliveryServiceSqlLiteContext>
+    {
+        public UserSqlLiteRepository(DeliveryServiceSqlLiteContext context) : base(context)
+        { }
+    }
+
     public class UserRepository<TContext> : IUserRepository
         where TContext : DeliveryServiceContext
     {
@@ -17,14 +29,14 @@ namespace DeliveryService.Repositories
             _context = context;
         }
 
-        public Person GetPerson(int missing_name)
+        public Person GetPerson(int id)
         {
-            throw new NotImplementedException();
+           return new Person {Id = id};
         }
 
-        public bool AddPerson(Person missing_name)
+        public bool AddPerson(Person person)
         {
-            throw new NotImplementedException();
+            return true;
         }
     }
 }

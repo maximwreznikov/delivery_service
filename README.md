@@ -1,12 +1,29 @@
 ﻿Simple delivery service on .NET Core.
 
+Function service component: 
+HTTP API. 
+Methods:
+GetAvailableDeliveries() - return deliveries, wich have status Available;
+TakeDelivery(int userId, int deliveryId) - attach delivery for user (change status to Taken);
+In case если доставка не найдена, return 404 с соответствующим сообщением в ответе;
+In case если статус отличается от Available, return 422 с соответствующим сообщением в ответе;
+Requirements:
+Application must work "out of the box", i.e. it should not require installation of any additional software (only standart .NET Framework + Nuget packeges);
+For storage data must be 2 variants: SQLite and PostgreSQL.
+HTTP API have to developed with REST principe;
+If unexpected error occurred when calling any method that does not return any stacktrace - return status 500 with message InternalServerError;
+Field for delivery object: Id, Status, Title, UserId, CreationTime, ModificationTime;
+PS:
+For simlify task not necessary make user managment (create user, login/logout в систему, check user existance e.t.c.). 
+We believe that every positive integer userId is valid;
+
 Функциональные компоненты сервиса: 
 HTTP API. Методы:
 GetAvailableDeliveries() - возвращает доставки, доступные для взятия (в статусе Available);
 TakeDelivery(int userId, int deliveryId) - закрепляет за пользователем доставку (перевод в статус Taken);
 В случае если доставка не найдена, вернуть 404 с соответствующим сообщением в ответе;
 В случае если статус отличается от Available, вернуть 422 с соответствующим сообщением в ответе;
-Scheduler. Таски:
+Scheduler. Таски(not realized yet):
 CreateDeliveries - создаёт новые доставки;
 На каждое срабатывание таски создаётся от N до M (значения хранятся в конфиге) доставок;
 Таска срабатывает по расписанию, заданному интервалом в конфиге в секундах 
