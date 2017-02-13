@@ -9,8 +9,21 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DeliveryService.Repositories
 {
-    public class DeliveryRepository<TContext> : IDeliveryRepository 
-        where TContext : DeliveryServiceContext
+    public class DeliveryServiceNpsqlRepository : DeliveryRepository<DeliveryServiceNpsqlContext>
+    {
+        public DeliveryServiceNpsqlRepository(DeliveryServiceNpsqlContext context) : base(context)
+        { }
+    }
+
+    public class DeliverySqlLiteRepository : DeliveryRepository<DeliveryServiceSqlLiteContext>
+    {
+        public DeliverySqlLiteRepository(DeliveryServiceSqlLiteContext context) : base(context)
+        { }
+    }
+
+
+    public class DeliveryRepository<TContext> : IDeliveryRepository
+            where TContext : DeliveryServiceContext
     {
         private readonly TContext _context;
 
@@ -43,15 +56,4 @@ namespace DeliveryService.Repositories
         }
     }
 
-    public class DeliveryServiceNpsqlRepository : DeliveryRepository<DeliveryServiceNpsqlContext>
-    {
-        public DeliveryServiceNpsqlRepository(DeliveryServiceNpsqlContext context) : base(context)
-        { }
-    }
-
-    public class DeliverySqlLiteRepository : DeliveryRepository<DeliveryServiceSqlLiteContext>
-    {
-        public DeliverySqlLiteRepository(DeliveryServiceSqlLiteContext context) : base(context)
-        { }
-    }
 }

@@ -4,10 +4,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DeliveryService.Core;
+using DeliveryService.Core.Bootstrapper;
 using DeliveryService.Data;
 using DeliveryService.Repositories;
+using DryIoc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Internal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,7 +18,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nancy.Owin;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Nancy;
 using Nancy.Extensions;
+using Nancy.TinyIoc;
+using DryIoc.MefAttributedModel;
+using DryIoc.Microsoft.DependencyInjection;
 
 namespace DeliveryService
 {
@@ -23,6 +30,7 @@ namespace DeliveryService
     {
         // property for holding configuration
         public IConfigurationRoot Configuration { get; set; }
+        private DeliveryBootstrapper _bootstrapper;
 
         public Startup(IHostingEnvironment env)
         {
@@ -36,18 +44,29 @@ namespace DeliveryService
             Configuration = builder.Build();
         }
 
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddEntityFrameworkSqlite()
-                .AddDbContext<DeliveryServiceSqlLiteContext>();
-            
-            services.AddScoped<IDeliveryRepository, DeliverySqlLiteRepository>();
-            services.AddScoped<IUserRepository, UserRepository<DeliveryServiceSqlLiteContext>>();
-            services.AddSingleton<IDateTime, MachineClockDateTime>();
+            services.AddEntityFrameworkSqlite().AddDbContext<DeliveryServiceSqlLiteContext>();
+
+            var container = new Container();
+            var provider = container.WithMef()
+                // setup DI adapter
+                .WithDependencyInjectionAdapter(services,
+                    // optional: propagate exception if specified types are not resolved, and prevent fallback to default Asp resolution
+                    throwIfUnresolved: type => type.Name.EndsWith("Controller"))
+                // add registrations from CompositionRoot classs
+                .ConfigureServiceProvider<CompositionRoot>();
+
+            _bootstrapper = new DeliveryBootstrapper(container);
+
+            return provider;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, DeliveryServiceSqlLiteContext context)
+        public void Configure(IApplicationBuilder app, 
+            IHostingEnvironment env, 
+            ILoggerFactory loggerFactory,
+            DeliveryServiceSqlLiteContext context)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -63,9 +82,9 @@ namespace DeliveryService
                 app.UseExceptionHandler("/Error");
             }
 
-//            app.UseIdentity();
-
-            app.UseOwin(x => x.UseNancy(options => options.Bootstrapper = new DeliveryBootstrapper()));
+            app.UseOwin(x => x.UseNancy(o => o.Bootstrapper = _bootstrapper));
+//            app.UseWebSockets();
+//            app.UseSignalR();
             DbInitializer.Initialize(context);
         }
     }
