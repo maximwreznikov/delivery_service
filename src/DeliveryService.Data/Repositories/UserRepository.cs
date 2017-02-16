@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using DeliveryService.Data;
 using DeliveryService.Models;
 
-namespace DeliveryService.Repositories
+namespace DeliveryService.Data.Repositories
 {
     public class UserServiceNpsqlRepository : UserRepository<DeliveryServiceNpsqlContext>
     {

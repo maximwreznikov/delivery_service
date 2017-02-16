@@ -20,7 +20,6 @@
     "netcoreapp1.1": {
       "dependencies": {
         "Microsoft.NETCore.App": {
-          "type": "platform",
           "version": "1.1.0"
         },
         "Microsoft.Extensions.Configuration.Json": "1.1.0",
@@ -37,26 +36,26 @@
     }
   },
 
-    "buildOptions": {
-      "emitEntryPoint": true,
-      "preserveCompilationContext": true
-    },
+  "buildOptions": {
+    "emitEntryPoint": true,
+    "preserveCompilationContext": true
+  },
 
-    "runtimeOptions": {
-      "configProperties": {
-        "System.GC.Server": true
-      }
-    },
-
-    "publishOptions": {
-      "include": [
-        "wwwroot",
-        "appsettings.json",
-        "web.config"
-      ]
-    },
-
-    "scripts": {
-      "postpublish": [ "dotnet publish-iis --publish-folder %publish:OutputPath% --framework %publish:FullTargetFramework%" ]
+  "runtimeOptions": {
+    "configProperties": {
+      "System.GC.Server": false
     }
+  },
+
+  "publishOptions": {
+    "include": [
+      "wwwroot",
+      "appsettings.json",
+      "web.config"
+    ]
+  },
+
+  "runtimes": {
+    "win7-x64": {}
   }
+}

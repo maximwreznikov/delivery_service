@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DeliveryService.Core;
-using DeliveryService.Repositories;
+using DeliveryService.Data.Repositories;
 using DryIoc;
 using Nancy;
 using Nancy.ViewEngines;

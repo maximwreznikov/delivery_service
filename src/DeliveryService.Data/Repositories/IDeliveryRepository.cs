@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DeliveryService.Models;
 
-namespace DeliveryService.Repositories
+namespace DeliveryService.Data.Repositories
 {
     public interface IDeliveryRepository
     {

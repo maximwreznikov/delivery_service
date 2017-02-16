@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using DeliveryService.Core;
 using DeliveryService.Core.Bootstrapper;
 using DeliveryService.Data;
-using DeliveryService.Repositories;
 using DryIoc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 using DeliveryService.Core;
 using DeliveryService.Core.Responses;
 using DeliveryService.Data;
+using DeliveryService.Data.Repositories;
 using DeliveryService.Models;
-using DeliveryService.Repositories;
-using Microsoft.AspNetCore.Mvc;
 using Nancy;
 using Nancy.Routing;
 

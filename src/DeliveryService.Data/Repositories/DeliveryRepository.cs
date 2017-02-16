@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DeliveryService.Core;
 using DeliveryService.Data;
 using DeliveryService.Models;
-using Microsoft.AspNetCore.Mvc;
 
-namespace DeliveryService.Repositories
+namespace DeliveryService.Data.Repositories
 {
     public class DeliveryServiceNpsqlRepository : DeliveryRepository<DeliveryServiceNpsqlContext>
     {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using DeliveryService.Core;
 using DeliveryService.Core.Bootstrapper;
 using DeliveryService.Data;
-using DeliveryService.Repositories;
+using DeliveryService.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Internal;
@@ -16,8 +16,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nancy.Owin;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Nancy;
 using Nancy.Extensions;
 using Nancy.ViewEngines;
 using StructureMap;
@@ -45,7 +43,6 @@ namespace DeliveryService
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddEntityFrameworkSqlite().AddDbContext<DeliveryServiceSqlLiteContext>();
-//            services.AddMvc();
 
             var container = new Container();
             container.Configure(config =>
@@ -82,11 +79,7 @@ namespace DeliveryService
             {
                 app.UseExceptionHandler("/Error");
             }
-
-//            var b = container.GetServiceRegistrations().Where(s => s.ServiceType == typeof(IViewLocationProvider)).ToList();
-//            var b1 = container.GetServiceRegistrations().Where(s => s.ServiceType == typeof(FileSystemViewLocationProvider)).ToList();
-//            var a = container.Resolve<IViewLocationProvider>();
-
+            
             app.UseOwin(x => x.UseNancy(o => o.Bootstrapper = _bootstrapper));
 //            app.UseWebSockets();
 //            app.UseSignalR();

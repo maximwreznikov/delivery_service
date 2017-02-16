@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Moq;
 using Xunit;
 using DeliveryService.Core;
+using DeliveryService.Data.Repositories;
 using DeliveryService.Models;
 using DeliveryService.Modules;
-using DeliveryService.Repositories;
 using Nancy;
 using Nancy.Extensions;
 using Nancy.Testing;
@@ -81,7 +81,10 @@ namespace DeliveryService.Tests
         public async void TestGetAvailableDeliveries()
         {
             // Arrange
-            var objects = new List<DeliveryObject> {new DeliveryObject {Title = "1"}, new DeliveryObject { Title = "2" } };
+            var objects = new List<DeliveryObject> {new DeliveryObject {Title = "1" , Status=DeliveryStatus.Available},
+                new DeliveryObject { Title = "2",Status = DeliveryStatus.Available },
+                new DeliveryObject { Title = "3",Status = DeliveryStatus.Taken }
+            };
             var delivery = new Mock<IDeliveryRepository>();
             delivery.Setup(r => r.AllDeliveries()).Returns(objects);
 
