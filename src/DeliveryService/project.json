@@ -8,7 +8,10 @@
     "DryIoc": "2.10.0",
     "DryIoc.dll": "2.10.0",
     "DryIoc.Microsoft.DependencyInjection": "1.1.1",
-    "DryIoc.MefAttributedModel.dll": "3.0.0-preview-04"
+    "DryIoc.MefAttributedModel.dll": "3.0.0-preview-04",
+    "StructureMap.Microsoft.DependencyInjection": "1.3.0",
+    "StructureMap": "4.4.2",
+    "Nancy.Bootstrappers.StructureMap": "2.0.0-clinteastwood"
   },
   "commands": {
     "web": "Microsoft.AspNet.Server.Kestrel"

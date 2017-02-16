@@ -7,6 +7,7 @@ using DeliveryService.Core;
 using DeliveryService.Core.Bootstrapper;
 using DeliveryService.Data;
 using DeliveryService.Repositories;
+using DryIoc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Internal;
@@ -19,18 +20,20 @@ using Nancy.Owin;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Nancy;
 using Nancy.Extensions;
+using Nancy.TinyIoc;
+using DryIoc.MefAttributedModel;
+using DryIoc.Microsoft.DependencyInjection;
 using Nancy.ViewEngines;
-using StructureMap;
 
 namespace DeliveryService
 {
-    public class Startup
+    public class StartupDry
     {
         // property for holding configuration
         public IConfigurationRoot Configuration { get; set; }
         private DeliveryBootstrapper _bootstrapper;
 
-        public Startup(IHostingEnvironment env)
+        public StartupDry(IHostingEnvironment env)
         {
             // Set up configuration sources.
             var builder = new ConfigurationBuilder()
@@ -48,19 +51,16 @@ namespace DeliveryService
 //            services.AddMvc();
 
             var container = new Container();
-            container.Configure(config =>
-            {
-                // Register stuff in container, using the StructureMap APIs...
-                config.For<IDeliveryRepository>().Use<DeliverySqlLiteRepository>().ContainerScoped();
-                config.For<IUserRepository>().Use<UserSqlLiteRepository>().ContainerScoped();
-                config.For<IDateTime>().Add<MachineClockDateTime>().Singleton();
+            var provider = container
+                .WithMef()
+                .WithDependencyInjectionAdapter(services,
+                    throwIfUnresolved: type => type.Name.EndsWith("Module"))
+                .With(rules => rules.WithFactorySelector(Rules.SelectLastRegisteredFactory()))
+                .ConfigureServiceProvider<CompositionRoot>();
 
-                config.Populate(services);
-            });
+//            _bootstrapper = new DeliveryBootstrapper(container);
 
-            _bootstrapper = new DeliveryBootstrapper(container);
-
-            return container.GetInstance<IServiceProvider>();
+            return provider;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

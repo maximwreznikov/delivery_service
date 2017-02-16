@@ -93,6 +93,12 @@ namespace DeliveryService.Core.Bootstrapper
             {
                 foreach (var implementationType in registration.ImplementationTypes)
                 {
+                    if (registration.RegistrationType == typeof (IViewLocationProvider) ||
+                        registration.RegistrationType == typeof (FileSystemViewLocationProvider))
+                    {
+                        continue;
+                    }
+
                     Register(container, registration.RegistrationType, implementationType, registration.Lifetime, isScopedContainer);
                 }
             }

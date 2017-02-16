@@ -13,8 +13,9 @@ namespace DeliveryService
         {
             var host = new WebHostBuilder()
                 .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseKestrel()
+//                .UseStructureMap()
                 .UseStartup<Startup>()
+                .UseKestrel()
                 .Build();
             
             host.Run();
