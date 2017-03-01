@@ -7,6 +7,8 @@ using DeliveryService.Core;
 using DeliveryService.Core.Bootstrapper;
 using DeliveryService.Data;
 using DeliveryService.Data.Repositories;
+using DeliveryService.Middlewares;
+using DeliveryService.Scheduling;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Hosting.Internal;
@@ -64,26 +66,48 @@ namespace DeliveryService
         public void Configure(IApplicationBuilder app, 
             IHostingEnvironment env, 
             ILoggerFactory loggerFactory,
-            DeliveryServiceSqlLiteContext context, IContainer container)
+            IApplicationLifetime applicationLifetime)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            app.UseStaticFiles();
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 app.UseBrowserLink();
+
+                var context = app.ApplicationServices.GetService<DeliveryServiceSqlLiteContext>();
+                DbInitializer.Initialize(context);
             }
             else
             {
                 app.UseExceptionHandler("/Error");
             }
-            
+
             app.UseOwin(x => x.UseNancy(o => o.Bootstrapper = _bootstrapper));
-//            app.UseWebSockets();
-//            app.UseSignalR();
-            DbInitializer.Initialize(context);
+            app.UseServerSendsEvents();
+            //            app.UseWebSockets();
+            //            app.UseSignalR();
+
+            applicationLifetime.ApplicationStarted.Register(OnStarted);
+            applicationLifetime.ApplicationStopped.Register(OnShutdown);
+        }
+
+        private async void OnStarted()
+        {
+            // Init scheduler
+            await Console.Out.WriteLineAsync("Start job execution.");
+
+            await SchedulerRunner.Instance.RunJob<HelloJob>();
+        }
+
+        private async void OnShutdown()
+        {
+            // Shutdown scheduler
+            await SchedulerRunner.Instance.Shutdown();
         }
     }
 }
