@@ -35,51 +35,8 @@ namespace DeliveryService.Modules
                     .WithContentType("application/json")
                     .WithStatusCode(HttpStatusCode.OK));
 
-            Get("/GetAvailableDeliveries", 
-                args => Response.AsJson(repository.AllDeliveries().Where(x => x.Status == DeliveryStatus.Available).ToList())
-                    .WithContentType("application/json")
-                    .WithStatusCode(HttpStatusCode.OK));
-
-            Post("/CreateDelivery/{title}", args => CreateDelivery(args));
-            Post("/TakeDelivery/{user:int}.{delivery:int}", args => TakeDelivery(args));
+            
             Get("/Error", args => Response.AsJson("Internal server errror").WithStatusCode(HttpStatusCode.InternalServerError));
-        }
-
-        public Response CreateDelivery(dynamic args)
-        {
-            var time = _systemClock.Now;
-            var newDelivery = new DeliveryObject
-            {
-                Title = args.title,
-                PersonId = -1,
-                Status = DeliveryStatus.Available,
-                CreationTime = time,
-                ModificationTime = time
-            };
-            _repository.Add(newDelivery);
-            return Response.AsJson(newDelivery)
-            .WithContentType("application/json")
-            .WithStatusCode(HttpStatusCode.Created);
-        }
-
-        public Response TakeDelivery(dynamic args)
-        {
-            var user = _userRepository.GetPerson(args.user);
-            if (user == null) return Response.AsError(HttpStatusCode.Unauthorized, "Can`t find user");
-
-            DeliveryObject myDelivery = _repository.GetDelivery(args.delivery);
-            if (myDelivery == null) return Response.AsError(HttpStatusCode.NotFound, "Can`t find delivery");
-            if (myDelivery.Status != DeliveryStatus.Available) return Response.AsError(HttpStatusCode.UnprocessableEntity, "Wrong status! Delivery must have status Available");
-
-            myDelivery.ModificationTime = _systemClock.Now;
-            myDelivery.Status = DeliveryStatus.Taken;
-            myDelivery.PersonId = user.Id;
-
-           _repository.UpdateDelivery(myDelivery);
-
-            return Response.AsJson(myDelivery)
-            .WithContentType("application/json")
-            .WithStatusCode(HttpStatusCode.Accepted);
         }
     }
 }

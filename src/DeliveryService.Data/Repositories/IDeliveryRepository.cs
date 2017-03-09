@@ -10,6 +10,8 @@ namespace DeliveryService.Data.Repositories
     {
         IEnumerable<DeliveryObject> AllDeliveries();
         bool Add(DeliveryObject delivery);
+        DeliveryObject Create(string title, DateTime time, TimeSpan lifetime);
+        int RemoveAll(Func<DeliveryObject,bool> mark);
         DeliveryObject GetDelivery(int id);
         void UpdateDelivery(DeliveryObject delivery);
     }

@@ -3,8 +3,8 @@
 Function service component: 
 HTTP API. 
 Methods:
-GetAvailableDeliveries() - return deliveries, wich have status Available;
-TakeDelivery(int userId, int deliveryId) - attach delivery for user (change status to Taken);
+get_available - return deliveries, wich have status Available;
+take(int userId, int deliveryId) - attach delivery for user (change status to Taken);
 In case если доставка не найдена, return 404 с соответствующим сообщением в ответе;
 In case если статус отличается от Available, return 422 с соответствующим сообщением в ответе;
 Requirements:
@@ -19,8 +19,8 @@ We believe that every positive integer userId is valid;
 
 Функциональные компоненты сервиса: 
 HTTP API. Методы:
-GetAvailableDeliveries() - возвращает доставки, доступные для взятия (в статусе Available);
-TakeDelivery(int userId, int deliveryId) - закрепляет за пользователем доставку (перевод в статус Taken);
+get_available - возвращает доставки, доступные для взятия (в статусе Available);
+take - закрепляет за пользователем доставку (перевод в статус Taken);
 В случае если доставка не найдена, вернуть 404 с соответствующим сообщением в ответе;
 В случае если статус отличается от Available, вернуть 422 с соответствующим сообщением в ответе;
 Scheduler. Таски(not realized yet):

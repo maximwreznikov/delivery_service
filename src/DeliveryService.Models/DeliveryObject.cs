@@ -22,7 +22,7 @@ namespace DeliveryService.Models
         public DeliveryStatus? Status { get; set; }
         public string Title { get; set; }
         public DateTime CreationTime { get; set; }
-        public DateTime ModificationTime { get; set; }
+        public TimeSpan Lifetime { get; set; }
 
         public int PersonId { get; set; }
     }
